@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 import Timer from './timer';
+import Data from '../../data';
 
 class Renderer {
   public constructor() {
@@ -11,6 +12,11 @@ class Renderer {
     const playButton = document.querySelector('.play-button') as HTMLImageElement;
     const time = document.querySelector('.time') as Element;
     const course = document.querySelector('.course');
+
+    window.onload = async () => {
+      const data = await Data.get(course?.textContent || '');
+      time.textContent = data?.time || '00:00:00';
+    };
     
     linkAbout?.addEventListener('click' , function(){
       ipcRenderer.send('open-about-window');

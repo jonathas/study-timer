@@ -4,8 +4,8 @@
   "description": "",
   "main": "./build/main.js",
   "scripts": {
-    "build": "rm -Rf build && tsc && copyfiles **/*.html **/*.css **/*.png **/*.svg ./build",
-    "start": "npm run build && electron ./build/main.js"
+    "build": "rm -Rf build && tsc && copyfiles -e '**/build' **/*.html **/*.css **/*.png **/*.svg ./build",
+    "start": "electron ./build/main.js"
   },
   "author": "Jon Ribeiro <contact@jonathas.com>",
   "license": "GPL-3.0",

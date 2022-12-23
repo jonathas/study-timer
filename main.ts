@@ -46,7 +46,7 @@ ipcMain.on('close-about-window', () => {
   aboutWindow?.close();
 });
 
-ipcMain.on('stop-timer', async (event, courseName, time) => {
-  console.log(`The course ${courseName} was studied for ${time}. ${JSON.stringify(event)}`);
-  await Data.save(courseName);
+ipcMain.on('stop-timer', async (_event, courseName, time) => {
+  console.log(`The course ${courseName} was studied for ${time}.`);
+  await Data.save(courseName, time);
 });
