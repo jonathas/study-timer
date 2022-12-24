@@ -17,7 +17,7 @@ class Main {
       console.log('The app is ready!');
       const mainWindow = this.getMainWindow();      
       await this.setTrayMenu(mainWindow);
-      mainWindow.loadURL(this.getScreenPath('index'));
+      mainWindow.loadURL(this.getScreenPath('main'));
     });
   }
 
