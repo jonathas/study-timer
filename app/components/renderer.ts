@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import Timer from './timer';
-import Data from '../../data';
+import Data from '../helpers/data';
 
 class Renderer {
   public constructor() {

@@ -1,52 +1,81 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
-import Data from './data';
+import { app, BrowserWindow, ipcMain, Tray, Menu } from 'electron';
+import Data from './app/helpers/data';
+import Template from './app/helpers/template';
 
-app.on('ready', () => {
-  console.log('App is ready!');
-  const mainWindow = new BrowserWindow({
-    width: 600,
-    height: 400,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  });
+class Main {
+  private aboutWindow: BrowserWindow | null;
 
-  mainWindow.loadURL(`file://${__dirname}/app/index.html`);
-});
-
-app.on('window-all-closed', () => {
-  app.quit();
-});
-
-let aboutWindow: BrowserWindow | null;
-ipcMain.on('open-about-window', () => {
-  if (aboutWindow) {
-    return;
+  public constructor() {
+    this.init();
+    this.setOpenAboutWindowListener();
+    this.setCloseAboutWindowListener();
+    this.setStopTimerListener();
   }
-  aboutWindow = new BrowserWindow({
-    width: 300,
-    height: 220,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    },
-    alwaysOnTop: true,
-    frame: false
-  });
 
-  aboutWindow.on('closed', () => {
-    aboutWindow = null;
-  });
+  private init() {
+    let tray = null;
+    app.on('ready', () => {
+      console.log('App is ready!');
+      const mainWindow = this.getMainWindow();
+      tray = new Tray(`${__dirname}/app/img/icon-tray.png`);
+      const trayMenu = Menu.buildFromTemplate(Template.generateTrayTemplate(app));
+      tray.setContextMenu(trayMenu);
+    
+      mainWindow.loadURL(`file://${__dirname}/app/index.html`);
+    });
+  }
 
-  aboutWindow.loadURL(`file://${__dirname}/app/about.html`);
-});
+  private getMainWindow() {
+    return new BrowserWindow({
+      width: 600,
+      height: 400,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
+    });
+  }
 
-ipcMain.on('close-about-window', () => {
-  aboutWindow?.close();
-});
+  private setOpenAboutWindowListener() {
+    ipcMain.on('open-about-window', () => {
+      if (this.aboutWindow) {
+        return;
+      }
+      this.aboutWindow = this.getAboutWindow();
+    
+      this.aboutWindow.on('closed', () => {
+        this.aboutWindow = null;
+      });
+    
+      this.aboutWindow.loadURL(`file://${__dirname}/app/about.html`);
+    });
+  }
 
-ipcMain.on('stop-timer', async (_event, courseName, time) => {
-  console.log(`The course ${courseName} was studied for ${time}.`);
-  await Data.save(courseName, time);
-});
+  private getAboutWindow() {
+    return new BrowserWindow({
+      width: 300,
+      height: 220,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      },
+      alwaysOnTop: true,
+      frame: false
+    });
+  }
+
+  private setCloseAboutWindowListener() {
+    ipcMain.on('close-about-window', () => {
+      this.aboutWindow?.close();
+    });
+  }
+
+  private setStopTimerListener() {
+    ipcMain.on('stop-timer', async (_event, courseName, time) => {
+      console.log(`The course ${courseName} was studied for ${time}.`);
+      await Data.save(courseName, time);
+    });    
+  }
+}
+
+const main = new Main();
