@@ -1,10 +1,9 @@
+import Data from './data';
+
 class Template {
-  public generateTrayTemplate(app: Electron.App): Electron.MenuItem[] {
-    return [
-      { label: 'Courses', type: 'radio' },
-      { label: '', type: 'separator' },
-      { label: 'Quit', click: () => app.quit() }
-    ] as unknown as Electron.MenuItem[];
+  public async generateTrayTemplate(): Promise<Electron.MenuItem[]> {
+    const courses = await Data.getCourses();
+    return courses.map(label => ({ label, type: 'radio' })) as Electron.MenuItem[];
   }
 }
 

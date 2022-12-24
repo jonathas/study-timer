@@ -13,16 +13,18 @@ class Main {
   }
 
   private init() {
-    let tray = null;
-    app.on('ready', () => {
-      console.log('App is ready!');
-      const mainWindow = this.getMainWindow();
-      tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
-      const trayMenu = Menu.buildFromTemplate(Template.generateTrayTemplate(app));
-      tray.setContextMenu(trayMenu);
-    
+    app.on('ready', async () => {
+      console.log('The app is ready!');
+      const mainWindow = this.getMainWindow();      
+      await this.setTrayMenu();
       mainWindow.loadURL(this.getScreenPath('index'));
     });
+  }
+
+  private async setTrayMenu() {
+    const tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
+    const trayMenu = Menu.buildFromTemplate(await Template.generateTrayTemplate());
+    tray.setContextMenu(trayMenu);
   }
 
   private getScreenPath(screenName: string) {
