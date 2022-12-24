@@ -17,12 +17,16 @@ class Main {
     app.on('ready', () => {
       console.log('App is ready!');
       const mainWindow = this.getMainWindow();
-      tray = new Tray(`${__dirname}/app/img/icon-tray.png`);
+      tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
       const trayMenu = Menu.buildFromTemplate(Template.generateTrayTemplate(app));
       tray.setContextMenu(trayMenu);
     
-      mainWindow.loadURL(`file://${__dirname}/app/index.html`);
+      mainWindow.loadURL(this.getScreenPath('index'));
     });
+  }
+
+  private getScreenPath(screenName: string) {
+    return `file://${__dirname}/app/views/${screenName}.html`;
   }
 
   private getMainWindow() {
@@ -47,7 +51,7 @@ class Main {
         this.aboutWindow = null;
       });
     
-      this.aboutWindow.loadURL(`file://${__dirname}/app/about.html`);
+      this.aboutWindow.loadURL(this.getScreenPath('about'));
     });
   }
 

@@ -34,7 +34,7 @@ class Renderer {
       }
     
       imgs = imgs.reverse();
-      playButton.src = `img/${imgs[0]}-button.svg`;
+      playButton.src = `../assets/img/${imgs[0]}-button.svg`;
     });    
   }
 }

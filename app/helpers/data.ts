@@ -11,14 +11,14 @@ class Data {
     try {
       await stat(fileName);
     } catch (err) {
-      await mkdir(`${__dirname}/data`, { recursive: true });
+      await mkdir(`${__dirname}/../../data`, { recursive: true });
     } finally {
       await this.addTimeToCourse(courseName, time);
     }
   }
 
   private getFilename(courseName: string) {
-    return `${__dirname}/data/${courseName}.json`;
+    return `${__dirname}/../../data/${courseName}.json`;
   }
 
   private async addTimeToCourse(courseName: string, time: string) {
