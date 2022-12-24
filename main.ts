@@ -16,14 +16,14 @@ class Main {
     app.on('ready', async () => {
       console.log('The app is ready!');
       const mainWindow = this.getMainWindow();      
-      await this.setTrayMenu();
+      await this.setTrayMenu(mainWindow);
       mainWindow.loadURL(this.getScreenPath('index'));
     });
   }
 
-  private async setTrayMenu() {
+  private async setTrayMenu(mainWindow: BrowserWindow) {
     const tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
-    const trayMenu = Menu.buildFromTemplate(await Template.generateTrayTemplate());
+    const trayMenu = Menu.buildFromTemplate(await Template.generateTrayTemplate(mainWindow));
     tray.setContextMenu(trayMenu);
   }
 

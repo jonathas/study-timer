@@ -1,9 +1,12 @@
+import { BrowserWindow } from 'electron';
 import Data from './data';
 
 class Template {
-  public async generateTrayTemplate(): Promise<Electron.MenuItem[]> {
+  public async generateTrayTemplate(mainWindow: BrowserWindow): Promise<Electron.MenuItem[]> {
     const courses = await Data.getCourses();
-    return courses.map(label => ({ label, type: 'radio' })) as Electron.MenuItem[];
+    return [{ label: 'Courses' }, { label: '', type: 'separator' }]
+      .concat(courses.map(label => ({ label, type: 'radio', 
+        click: () => mainWindow.webContents.send('course-changed', label) }))) as Electron.MenuItem[];
   }
 }
 

@@ -11,7 +11,7 @@ class Renderer {
     const linkAbout = document.querySelector('#link-about');
     const playButton = document.querySelector('.play-button') as HTMLImageElement;
     const time = document.querySelector('.time') as Element;
-    const course = document.querySelector('.course');
+    const course = document.querySelector('.course') as Element;
 
     window.onload = async () => {
       const data = await Data.get(course?.textContent || '');
@@ -35,7 +35,17 @@ class Renderer {
     
       imgs = imgs.reverse();
       playButton.src = `../assets/img/${imgs[0]}-button.svg`;
-    });    
+    });
+
+    ipcRenderer.on('course-changed', async (_event, courseName) => {
+      await this.updateCourseData(course, time, courseName);
+    });
+  }
+
+  private async updateCourseData(course: Element, time: Element, courseName: string) {
+    course.textContent = courseName;
+    const courseData = await Data.get(courseName);
+    time.textContent = courseData?.time || '00:00:00';
   }
 }
 

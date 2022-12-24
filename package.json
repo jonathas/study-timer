@@ -4,7 +4,7 @@
   "description": "",
   "main": "./build/main.js",
   "scripts": {
-    "build": "rm -Rf build && tsc && copyfiles -e '**/build' **/*.html **/*.css **/*.png **/*.svg ./build",
+    "build": "rm -Rf build && tsc && copyfiles **/*.json **/*.html **/*.css **/*.png **/*.svg ./build",
     "start": "electron ./build/main.js"
   },
   "author": "Jon Ribeiro <contact@jonathas.com>",
