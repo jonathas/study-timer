@@ -1,7 +1,7 @@
 {
   "name": "study-timer",
   "version": "1.0.0",
-  "description": "",
+  "description": "Study Timer helps you to keep track of your study time",
   "main": "./build/main.js",
   "scripts": {
     "build": "rm -Rf build && tsc && copyfiles **/*.json **/*.html **/*.css **/*.png **/*.svg ./build",
