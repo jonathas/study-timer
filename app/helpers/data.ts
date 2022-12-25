@@ -13,14 +13,14 @@ class Data {
     mkdirSync(this.dataDirPath, { recursive: true });
   }
 
-  public async save(courseName: string, time: string) {
+  public async save(courseName: string, time?: string) {
     const fileName = this.getFilename(courseName);
     try {
       await stat(fileName);
     } catch (err) {
       console.log(`The file for "${courseName}" does not exist yet. Creating it...`);
     } finally {
-      await this.addTimeToCourse(courseName, time);
+      await this.addTimeToCourse(courseName, time || '00:00:00');
     }
   }
 

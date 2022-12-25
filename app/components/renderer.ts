@@ -7,6 +7,8 @@ class Renderer {
   private playButton: HTMLImageElement;
   private time: Element;
   private course: Element;
+  private addButton: Element;
+  private addInput: HTMLInputElement;
 
   public constructor() {
     this.setSelectors();
@@ -18,6 +20,8 @@ class Renderer {
     this.playButton = document.querySelector('.play-button') as HTMLImageElement;
     this.time = document.querySelector('.time') as Element;
     this.course = document.querySelector('.course') as Element;
+    this.addButton = document.querySelector('.add-button') as Element;
+    this.addInput = document.querySelector('.add-input') as HTMLInputElement;
   }
 
   private addEventListeners() {
@@ -45,9 +49,23 @@ class Renderer {
       this.playButton.src = `../assets/img/${imgs[0]}-button.svg`;
     });
 
+    this.addButton?.addEventListener('click', async () => {
+      await this.addCourse();
+    });
+
     ipcRenderer.on('course-changed', async (_event, courseName) => {
       await this.updateCourseData(courseName);
     });
+  }
+
+  private async addCourse() {
+    const courseName = this.addInput?.value || '';
+    if (!courseName) {
+      return;
+    }
+    this.course.textContent = courseName;
+    await Data.save(courseName);
+    this.addInput.value = '';
   }
 
   private async updateCourseData(courseName: string) {
