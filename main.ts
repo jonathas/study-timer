@@ -5,7 +5,7 @@ import Template from './app/helpers/template';
 class Main {
   private aboutWindow: BrowserWindow | null;
 
-  private trayIcon = `${__dirname}/app/assets/img/icon-tray.png`;
+  private tray: Tray;
 
   public constructor() {
     this.init();
@@ -17,21 +17,16 @@ class Main {
   private init() {
     app.on('ready', async () => {
       const mainWindow = this.getMainWindow();
+      this.tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
       await this.setTrayMenu(mainWindow);
       this.setCourseAddedListener(mainWindow);
       await mainWindow.loadURL(this.getScreenPath('main'));
     });
   }
 
-  private async setTrayMenu(mainWindow: BrowserWindow, newCourse?: string) {
-    const tray = new Tray(this.trayIcon);
-
-    const template = !newCourse
-      ? await Template.generateTrayTemplate(mainWindow)
-      : await Template.addCourseToTray(newCourse, mainWindow);
-
-    const trayMenu = Menu.buildFromTemplate(template);
-    tray.setContextMenu(trayMenu);
+  private async setTrayMenu(mainWindow: BrowserWindow, selectedCourse?: string) {
+    const template = await Template.generateTrayTemplate(mainWindow, selectedCourse);
+    this.tray.setContextMenu(Menu.buildFromTemplate(template));
   }
 
   private getScreenPath(screenName: string) {
@@ -90,7 +85,7 @@ class Main {
   }
 
   private setCourseAddedListener(mainWindow: BrowserWindow) {
-    ipcMain.on('course-added', async (_event, courseName) => {
+    ipcMain.on('course-added', async (_event, courseName: string) => {
       await this.setTrayMenu(mainWindow, courseName);
     });
   }

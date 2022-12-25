@@ -69,8 +69,9 @@ class Renderer {
       return;
     }
     this.course.textContent = courseName;
-    await Data.save(courseName);
+    this.time.textContent = '00:00:00';
     this.addInput.value = '';
+    await Data.save(courseName);
     ipcRenderer.send('course-added', courseName);
   }
 
