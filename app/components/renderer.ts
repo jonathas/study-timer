@@ -58,7 +58,7 @@ class Renderer {
       await this.addCourse();
     });
 
-    ipcRenderer.on('course-changed', async (_event, courseName) => {
+    ipcRenderer.on('course-changed', async (_event, courseName: string) => {
       await this.updateCourseData(courseName);
     });
   }

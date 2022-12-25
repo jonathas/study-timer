@@ -79,7 +79,7 @@ class Main {
   }
 
   private setStopTimerListener() {
-    ipcMain.on('stop-timer', async (_event, courseName, time) => {
+    ipcMain.on('stop-timer', async (_event, courseName: string, time: string) => {
       await Data.save(courseName, time);
     });
   }

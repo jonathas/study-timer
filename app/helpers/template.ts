@@ -17,16 +17,6 @@ class Template {
       }))
     ) as Electron.MenuItem[];
   }
-
-  public async addCourseToTray(courseName: string, mainWindow: BrowserWindow) {
-    const trayTemplate = await this.generateTrayTemplate(mainWindow);
-    const newCourse = {
-      label: courseName,
-      type: 'radio',
-      click: () => mainWindow.webContents.send('course-changed', courseName)
-    } as unknown as Electron.MenuItem;
-    return trayTemplate.concat([newCourse]);
-  }
 }
 
 export default new Template();
