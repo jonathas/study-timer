@@ -1,4 +1,4 @@
-import { stat, writeFile, readFile, readdir } from 'fs/promises';
+import { writeFile, readFile, readdir } from 'fs/promises';
 import { mkdirSync } from 'fs';
 
 interface CourseFile {
@@ -13,27 +13,11 @@ class Data {
     mkdirSync(this.dataDirPath, { recursive: true });
   }
 
-  public async save(courseName: string, time?: string) {
-    const fileExists = await this.fileForCourseExists(courseName);
-    if (!fileExists) {
-      await this.addTimeToCourse(courseName, time || '00:00:00');
-    }
-  }
-
-  private async fileForCourseExists(courseNane: string) {
-    try {
-      await stat(this.getFilename(courseNane));
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
-
   private getFilename(courseName: string) {
     return `${this.dataDirPath}/${courseName}.json`;
   }
 
-  private async addTimeToCourse(courseName: string, time: string) {
+  public async save(courseName: string, time = '00:00:00') {
     const fileName = this.getFilename(courseName);
     const data = {
       lastStudy: new Date().toISOString(),
