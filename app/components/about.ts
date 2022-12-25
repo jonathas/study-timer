@@ -14,15 +14,15 @@ class About {
   }
 
   private addListeners() {
-    const linkClose = document.querySelector("#link-close");
-    const linkWebsite = document.querySelector("#link-website");
+    const linkClose = document.querySelector('#link-close');
+    const linkWebsite = document.querySelector('#link-website');
 
-    linkClose?.addEventListener('click', function () {
+    linkClose?.addEventListener('click', () => {
       ipcRenderer.send('close-about-window');
     });
 
-    linkWebsite?.addEventListener('click', function () {
-      shell.openExternal("https://jonathas.com");
+    linkWebsite?.addEventListener('click', async () => {
+      await shell.openExternal('https://jonathas.com');
     });
   }
 }

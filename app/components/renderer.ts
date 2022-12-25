@@ -4,10 +4,15 @@ import Data from '../helpers/data';
 
 class Renderer {
   private linkAbout: Element;
+
   private playButton: HTMLImageElement;
+
   private time: Element;
+
   private course: Element;
+
   private addButton: Element;
+
   private addInput: HTMLInputElement;
 
   public constructor() {
@@ -29,11 +34,11 @@ class Renderer {
       const data = await Data.get(this.course?.textContent || '');
       this.time.textContent = data?.time || '00:00:00';
     };
-    
-    this.linkAbout?.addEventListener('click' , () => {
+
+    this.linkAbout?.addEventListener('click', () => {
       ipcRenderer.send('open-about-window');
     });
-    
+
     let imgs = ['play', 'stop'];
     let play = false;
     this.playButton?.addEventListener('click', () => {
@@ -44,7 +49,7 @@ class Renderer {
         Timer.start(this.time);
         play = true;
       }
-    
+
       imgs = imgs.reverse();
       this.playButton.src = `../assets/img/${imgs[0]}-button.svg`;
     });
@@ -66,6 +71,7 @@ class Renderer {
     this.course.textContent = courseName;
     await Data.save(courseName);
     this.addInput.value = '';
+    ipcRenderer.send('course-added', courseName);
   }
 
   private async updateCourseData(courseName: string) {

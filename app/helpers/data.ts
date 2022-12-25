@@ -14,13 +14,18 @@ class Data {
   }
 
   public async save(courseName: string, time?: string) {
-    const fileName = this.getFilename(courseName);
-    try {
-      await stat(fileName);
-    } catch (err) {
-      console.log(`The file for "${courseName}" does not exist yet. Creating it...`);
-    } finally {
+    const fileExists = await this.fileForCourseExists(courseName);
+    if (!fileExists) {
       await this.addTimeToCourse(courseName, time || '00:00:00');
+    }
+  }
+
+  private async fileForCourseExists(courseNane: string) {
+    try {
+      await stat(this.getFilename(courseNane));
+      return true;
+    } catch (err) {
+      return false;
     }
   }
 
@@ -34,7 +39,7 @@ class Data {
       lastStudy: new Date().toISOString(),
       time
     };
-    await writeFile(fileName, JSON.stringify(data, null, 2), { encoding: 'utf-8' })
+    await writeFile(fileName, JSON.stringify(data, null, 2), { encoding: 'utf-8' });
   }
 
   public async get(courseName: string) {
@@ -47,7 +52,7 @@ class Data {
 
   public async getCourses() {
     const courses = await readdir(this.dataDirPath, { encoding: 'utf-8' });
-    return courses.map(course => course.replace('.json', ''));
+    return courses.map((course) => course.replace('.json', ''));
   }
 }
 

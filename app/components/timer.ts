@@ -5,15 +5,18 @@ dayjs.extend(duration);
 
 class Timer {
   private timer: NodeJS.Timer;
-  private time: number = 0;
+
+  private time = 0;
 
   public start(e: Element) {
     const parsedDuration = e.textContent?.split(':');
-    const input = parsedDuration ? {
-      hours: parsedDuration[0],
-      minutes: parsedDuration[1],
-      seconds: parsedDuration[2]
-    } : 0;
+    const input = parsedDuration
+      ? {
+          hours: parsedDuration[0],
+          minutes: parsedDuration[1],
+          seconds: parsedDuration[2]
+        }
+      : 0;
     const duration = dayjs.duration(input as unknown as number);
 
     this.time = duration.asSeconds();

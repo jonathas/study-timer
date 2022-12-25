@@ -5,6 +5,8 @@ import Template from './app/helpers/template';
 class Main {
   private aboutWindow: BrowserWindow | null;
 
+  private trayIcon = `${__dirname}/app/assets/img/icon-tray.png`;
+
   public constructor() {
     this.init();
     this.setOpenAboutWindowListener();
@@ -14,16 +16,21 @@ class Main {
 
   private init() {
     app.on('ready', async () => {
-      console.log('The app is ready!');
-      const mainWindow = this.getMainWindow();      
+      const mainWindow = this.getMainWindow();
       await this.setTrayMenu(mainWindow);
-      mainWindow.loadURL(this.getScreenPath('main'));
+      this.setCourseAddedListener(mainWindow);
+      await mainWindow.loadURL(this.getScreenPath('main'));
     });
   }
 
-  private async setTrayMenu(mainWindow: BrowserWindow) {
-    const tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
-    const trayMenu = Menu.buildFromTemplate(await Template.generateTrayTemplate(mainWindow));
+  private async setTrayMenu(mainWindow: BrowserWindow, newCourse?: string) {
+    const tray = new Tray(this.trayIcon);
+
+    const template = !newCourse
+      ? await Template.generateTrayTemplate(mainWindow)
+      : await Template.addCourseToTray(newCourse, mainWindow);
+
+    const trayMenu = Menu.buildFromTemplate(template);
     tray.setContextMenu(trayMenu);
   }
 
@@ -43,17 +50,17 @@ class Main {
   }
 
   private setOpenAboutWindowListener() {
-    ipcMain.on('open-about-window', () => {
+    ipcMain.on('open-about-window', async () => {
       if (this.aboutWindow) {
         return;
       }
       this.aboutWindow = this.getAboutWindow();
-    
+
       this.aboutWindow.on('closed', () => {
         this.aboutWindow = null;
       });
-    
-      this.aboutWindow.loadURL(this.getScreenPath('about'));
+
+      await this.aboutWindow.loadURL(this.getScreenPath('about'));
     });
   }
 
@@ -78,10 +85,15 @@ class Main {
 
   private setStopTimerListener() {
     ipcMain.on('stop-timer', async (_event, courseName, time) => {
-      console.log(`The course ${courseName} was studied for ${time}.`);
       await Data.save(courseName, time);
-    });    
+    });
+  }
+
+  private setCourseAddedListener(mainWindow: BrowserWindow) {
+    ipcMain.on('course-added', async (_event, courseName) => {
+      await this.setTrayMenu(mainWindow, courseName);
+    });
   }
 }
 
-const main = new Main();
+new Main();
