@@ -47,3 +47,9 @@ For the 3 platforms at once:
 ```bash
 npm run pack:all
 ```
+
+Ps: In order to pack it for Windows using MacOS or Linux, you'll need wine. On MacOS you can install it using HomeBrew:
+
+```bash
+brew install --cask wine-stable
+```
