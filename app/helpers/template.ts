@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, ipcMain } from 'electron';
 import Data from './data';
 
 class Template {
@@ -18,7 +18,7 @@ class Template {
     ) as Electron.MenuItem[];
   }
 
-  public generateMainMenuTemplate(): Electron.MenuItem[] {
+  public generateMainMenuTemplate(app: Electron.App): Electron.MenuItem[] {
     return [
       {
         label: app.getName(),

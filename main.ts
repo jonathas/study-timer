@@ -21,7 +21,7 @@ class Main {
       const mainWindow = this.getMainWindow();
       this.tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
       await this.setTrayMenu(mainWindow);
-      this.setApplicationMenu();
+      this.setApplicationMenu(app);
       this.setCourseAddedListener(mainWindow);
       await mainWindow.loadURL(this.getScreenPath('main'));
     });
@@ -43,8 +43,8 @@ class Main {
     this.tray.setContextMenu(Menu.buildFromTemplate(template));
   }
 
-  private setApplicationMenu() {
-    this.applicationMenu = Menu.buildFromTemplate(Template.generateMainMenuTemplate());
+  private setApplicationMenu(app: Electron.App) {
+    this.applicationMenu = Menu.buildFromTemplate(Template.generateMainMenuTemplate(app));
     Menu.setApplicationMenu(this.applicationMenu);
   }
 
