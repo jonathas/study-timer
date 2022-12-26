@@ -1,5 +1,6 @@
 import { ipcRenderer, shell } from 'electron';
 import * as process from 'process';
+import { Events } from '../helpers/events';
 const pkg = require('../../package.json');
 
 class About {
@@ -24,7 +25,7 @@ class About {
     const linkWebsite = document.querySelector('#link-website');
 
     linkClose?.addEventListener('click', () => {
-      ipcRenderer.send('close-about-window');
+      ipcRenderer.send(Events.CLOSE_ABOUT_WINDOW);
     });
 
     linkWebsite?.addEventListener('click', async () => {

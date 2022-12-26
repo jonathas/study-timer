@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, Tray, Menu } from 'electron';
 import Data from './app/helpers/data';
+import { Events } from './app/helpers/events';
 import Template from './app/helpers/template';
 
 class Main {
@@ -59,7 +60,7 @@ class Main {
   }
 
   private setOpenAboutWindowListener() {
-    ipcMain.on('open-about-window', async () => {
+    ipcMain.on(Events.OPEN_ABOUT_WINDOW, async () => {
       if (this.aboutWindow) {
         return;
       }
@@ -87,13 +88,13 @@ class Main {
   }
 
   private setCloseAboutWindowListener() {
-    ipcMain.on('close-about-window', () => {
+    ipcMain.on(Events.CLOSE_ABOUT_WINDOW, () => {
       this.aboutWindow?.close();
     });
   }
 
   private setStopTimerListener() {
-    ipcMain.on('stop-timer', async (_event, courseName: string, time: string) => {
+    ipcMain.on(Events.STOP_TIMER, async (_event, courseName: string, time: string) => {
       await Data.save(courseName, time);
     });
   }

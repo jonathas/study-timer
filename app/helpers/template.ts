@@ -1,5 +1,6 @@
 import { BrowserWindow, ipcMain } from 'electron';
 import Data from './data';
+import { Events } from './events';
 
 class Template {
   public async generateTrayTemplate(
@@ -13,7 +14,7 @@ class Template {
         label,
         type: 'radio',
         checked: label === selectedCourse,
-        click: () => mainWindow.webContents.send('course-changed', label)
+        click: () => mainWindow.webContents.send(Events.COURSE_CHANGED, label)
       }))
     ) as Electron.MenuItem[];
   }
@@ -40,7 +41,8 @@ class Template {
         submenu: [
           {
             label: 'About Study Timer',
-            click: () => ipcMain.emit('open-about-window')
+            click: () => ipcMain.emit(Events.OPEN_ABOUT_WINDOW),
+            accelerator: 'CmdOrCtrl+Shift+I'
           }
         ]
       }

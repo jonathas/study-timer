@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import Timer from './timer';
 import Data from '../helpers/data';
+import { Events } from '../helpers/events';
 
 class Renderer {
   private linkAbout: Element;
@@ -36,7 +37,7 @@ class Renderer {
     };
 
     this.linkAbout?.addEventListener('click', () => {
-      ipcRenderer.send('open-about-window');
+      ipcRenderer.send(Events.OPEN_ABOUT_WINDOW);
     });
 
     let imgs = ['play', 'stop'];
@@ -58,7 +59,7 @@ class Renderer {
       await this.addCourse();
     });
 
-    ipcRenderer.on('course-changed', async (_event, courseName: string) => {
+    ipcRenderer.on(Events.COURSE_CHANGED, async (_event, courseName: string) => {
       await this.updateCourseData(courseName);
     });
   }
@@ -72,7 +73,7 @@ class Renderer {
     this.time.textContent = '00:00:00';
     this.addInput.value = '';
     await Data.save(courseName);
-    ipcRenderer.send('course-added', courseName);
+    ipcRenderer.send(Events.COURSE_ADDED, courseName);
   }
 
   private async updateCourseData(courseName: string) {

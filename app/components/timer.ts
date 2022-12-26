@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { Events } from '../helpers/events';
 dayjs.extend(duration);
 
 class Timer {
@@ -30,7 +31,7 @@ class Timer {
 
   public stop(courseName: string) {
     clearInterval(this.timer);
-    ipcRenderer.send('stop-timer', courseName, this.getFormattedTime());
+    ipcRenderer.send(Events.STOP_TIMER, courseName, this.getFormattedTime());
   }
 
   private getFormattedTime() {
