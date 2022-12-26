@@ -5,6 +5,8 @@ import Template from './app/helpers/template';
 class Main {
   private aboutWindow: BrowserWindow | null;
 
+  private applicationMenu: Menu;
+
   private tray: Tray;
 
   public constructor() {
@@ -19,18 +21,10 @@ class Main {
       const mainWindow = this.getMainWindow();
       this.tray = new Tray(`${__dirname}/app/assets/img/icon-tray.png`);
       await this.setTrayMenu(mainWindow);
+      this.setApplicationMenu();
       this.setCourseAddedListener(mainWindow);
       await mainWindow.loadURL(this.getScreenPath('main'));
     });
-  }
-
-  private async setTrayMenu(mainWindow: BrowserWindow, selectedCourse?: string) {
-    const template = await Template.generateTrayTemplate(mainWindow, selectedCourse);
-    this.tray.setContextMenu(Menu.buildFromTemplate(template));
-  }
-
-  private getScreenPath(screenName: string) {
-    return `file://${__dirname}/app/views/${screenName}.html`;
   }
 
   private getMainWindow() {
@@ -42,6 +36,26 @@ class Main {
         contextIsolation: false
       }
     });
+  }
+
+  private async setTrayMenu(mainWindow: BrowserWindow, selectedCourse?: string) {
+    const template = await Template.generateTrayTemplate(mainWindow, selectedCourse);
+    this.tray.setContextMenu(Menu.buildFromTemplate(template));
+  }
+
+  private setApplicationMenu() {
+    this.applicationMenu = Menu.buildFromTemplate(Template.generateMainMenuTemplate());
+    Menu.setApplicationMenu(this.applicationMenu);
+  }
+
+  private setCourseAddedListener(mainWindow: BrowserWindow) {
+    ipcMain.on('course-added', async (_event, courseName: string) => {
+      await this.setTrayMenu(mainWindow, courseName);
+    });
+  }
+
+  private getScreenPath(screenName: string) {
+    return `file://${__dirname}/app/views/${screenName}.html`;
   }
 
   private setOpenAboutWindowListener() {
@@ -81,12 +95,6 @@ class Main {
   private setStopTimerListener() {
     ipcMain.on('stop-timer', async (_event, courseName: string, time: string) => {
       await Data.save(courseName, time);
-    });
-  }
-
-  private setCourseAddedListener(mainWindow: BrowserWindow) {
-    ipcMain.on('course-added', async (_event, courseName: string) => {
-      await this.setTrayMenu(mainWindow, courseName);
     });
   }
 }

@@ -13,10 +13,6 @@ class Data {
     mkdirSync(this.dataDirPath, { recursive: true });
   }
 
-  private getFilename(courseName: string) {
-    return `${this.dataDirPath}/${courseName}.json`;
-  }
-
   public async save(courseName: string, time = '00:00:00') {
     const fileName = this.getFilename(courseName);
     const data = {
@@ -24,6 +20,10 @@ class Data {
       time
     };
     await writeFile(fileName, JSON.stringify(data, null, 2), { encoding: 'utf-8' });
+  }
+
+  private getFilename(courseName: string) {
+    return `${this.dataDirPath}/${courseName}.json`;
   }
 
   public async get(courseName: string) {
