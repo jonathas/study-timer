@@ -1,5 +1,6 @@
 import { ipcRenderer, shell } from 'electron';
 import * as process from 'process';
+const pkg = require('../../package.json');
 
 class About {
   public constructor() {
@@ -7,6 +8,11 @@ class About {
       const electronVersion = document.querySelector('#electron-version');
       if (electronVersion) {
         electronVersion.textContent = process.versions.electron;
+      }
+
+      const appVersion = document.querySelector('#app-version');
+      if (appVersion) {
+        appVersion.textContent = pkg.version;
       }
 
       this.addListeners();
