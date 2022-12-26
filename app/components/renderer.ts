@@ -62,6 +62,11 @@ class Renderer {
     ipcRenderer.on(Events.COURSE_CHANGED, async (_event, courseName: string) => {
       await this.updateCourseData(courseName);
     });
+
+    ipcRenderer.on(Events.START_STOP_TIMER, () => {
+      const click = new MouseEvent('click');
+      this.playButton.dispatchEvent(click);
+    });
   }
 
   private async addCourse() {

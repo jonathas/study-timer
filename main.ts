@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Tray, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } from 'electron';
 import Data from './app/helpers/data';
 import { Events } from './app/helpers/events';
 import Template from './app/helpers/template';
@@ -24,6 +24,11 @@ class Main {
       await this.setTrayMenu(mainWindow);
       this.setApplicationMenu(app);
       this.setCourseAddedListener(mainWindow);
+
+      globalShortcut.register('CommandOrControl+Shift+S', () => {
+        mainWindow.webContents.send(Events.START_STOP_TIMER);
+      });
+
       await mainWindow.loadURL(this.getScreenPath('main'));
     });
   }
