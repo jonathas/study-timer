@@ -9,7 +9,7 @@ class Timer {
 
   private time = 0;
 
-  public start(e: Element) {
+  public start(courseName: string, e: Element) {
     const parsedDuration = e.textContent?.split(':');
     const input = parsedDuration
       ? {
@@ -27,11 +27,20 @@ class Timer {
       this.time++;
       e.textContent = this.getFormattedTime();
     }, 1000);
+
+    new Notification('Study Timer', {
+      body: `Timer started for ${courseName}`,
+      icon: '../assets/img/play-button.svg'
+    });
   }
 
   public stop(courseName: string) {
     clearInterval(this.timer);
     ipcRenderer.send(Events.STOP_TIMER, courseName, this.getFormattedTime());
+    new Notification('Study Timer', {
+      body: `Timer stopped for ${courseName}`,
+      icon: '../assets/img/stop-button.svg'
+    });
   }
 
   private getFormattedTime() {

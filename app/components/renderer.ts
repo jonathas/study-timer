@@ -47,7 +47,7 @@ class Renderer {
         Timer.stop(this.course?.textContent || '');
         play = false;
       } else {
-        Timer.start(this.time);
+        Timer.start(this.course?.textContent || '', this.time);
         play = true;
       }
 
