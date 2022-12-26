@@ -64,9 +64,13 @@ class Renderer {
     });
 
     ipcRenderer.on(Events.START_STOP_TIMER, () => {
-      const click = new MouseEvent('click');
-      this.playButton.dispatchEvent(click);
+      this.clickOnThePlayOrStopButton();
     });
+  }
+
+  private clickOnThePlayOrStopButton() {
+    const click = new MouseEvent('click');
+    this.playButton.dispatchEvent(click);
   }
 
   private async addCourse() {
@@ -82,6 +86,11 @@ class Renderer {
   }
 
   private async updateCourseData(courseName: string) {
+    // Stop the current timer if it's running
+    if (this.playButton.src.includes('stop')) {
+      this.clickOnThePlayOrStopButton();
+    }
+
     this.course.textContent = courseName;
     const courseData = await Data.get(courseName);
     this.time.textContent = courseData?.time || '00:00:00';
